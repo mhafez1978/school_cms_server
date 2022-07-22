@@ -1,0 +1,35 @@
+{
+  "name": "school_server",
+  "version": "1.0.0",
+  "description": "Backend API Server for School CMS System",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhafez1978/school_cms_server.git"
+  },
+  "keywords": [
+    "Node",
+    "Express",
+    "MySQL",
+    "Sequelize",
+    "JWT"
+  ],
+  "author": "Mohamed Hafez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mhafez1978/school_cms_server/issues"
+  },
+  "homepage": "https://github.com/mhafez1978/school_cms_server#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
