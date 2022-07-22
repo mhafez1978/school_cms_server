@@ -29,7 +29,17 @@ myRouter.get('/about', router.about)
 // teachers will create exams 
 // exams will be graded and results or score added to student score card
 
+// list all available courses
+myRouter.get('/courses', router.courses)
+// this will handle both get by id and get by slug 
+// i check query if its a empty then we list all courses
+// if query is number I check for course by id
+// if query is not empty and not a number then I use as slug
+myRouter.get('/courses/:query', router.courses)
 
+myRouter.post('/courses/add', router.courses)
+myRouter.patch('/courses/:id', router.courses)
+myRouter.delete('/courses/:id', router.courses)
 
 // brings server online
 const PORT = process.env.PORT;
