@@ -1,11 +1,13 @@
-require('dotenv').config();
+const dotenv = require('dotenv');
 const express = require('express');
-const router = express.Router();
+const myRouter = express.Router();
 const app = express();
-const router1 = require('./router1/index.js')
+const router = require('./router/index.js')
+
+dotenv.config();
 
 // middleware
-app.use(router)
+app.use(myRouter);
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
@@ -14,8 +16,19 @@ app.use(express.json());
 // routers redirects to appropriate controller
 // controller may communicate with models and return data to client
 
-router.get('/', router1.home)
-router.get('/about', router1.about)
+myRouter.get('/', router.home)
+myRouter.get('/about', router.about)
+
+
+// let the fun begin
+// create a route to add a school 
+// each school will have classes
+// classes will be taught by teachers
+// teachers will teach class subjects to students
+// students will register to classes
+// teachers will create exams 
+// exams will be graded and results or score added to student score card
+
 
 
 // brings server online

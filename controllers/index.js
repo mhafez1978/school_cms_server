@@ -1,3 +1,4 @@
-const Controller = (req,res) => {
-	res.send('hello')
-}
+const homePageController = require('./home/index.js')
+const aboutPageController = require('./about/index.js')
+
+module.exports = { homePageController,aboutPageController }

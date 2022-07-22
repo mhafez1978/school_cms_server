@@ -1,4 +1,4 @@
-const controllers = require('./controllers/index.js')
+const controllers = require('../controllers/index.js')
 
 const home = (req,res) => {
 	return controllers.homePageController(req,res)
