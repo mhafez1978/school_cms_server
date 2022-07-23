@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const db = require("../../database/db.js");
 const Course = require("../../models/courses/courses.js");
 
@@ -29,15 +30,40 @@ const getAllCourses = async(req,res)=>{
 			}
 		})
 		.then(data=>{
-			res.send(data)
+			if(data){
+				console.log('Found match to your query: ', data)
+				res.send(data)
+			}else{
+				res.send("No course found with this id ...")
+			}
 		})
 		.catch(err=>{
 			console.log(err)
 		})
 	}else if(req.params.query === undefined){
-		res.send('All courses should be listed here , this is from the getAllCourses controller');
+		const data = await Course.findAll()
+		res.send(data);
 	}else{
-		res.send('searching by slug maybe...')
+		const slug = req.params.query;
+		const data = await Course.findOne({
+			where: {
+				title:{
+					[Op.like]:`%${slug}%`
+				}
+			}
+		})
+		.then(data=>{
+			if(data){
+				console.log(data)
+				res.send(data)
+			}else{
+				res.send('No course found matching your query ...')
+			}
+		})
+		.catch(err=>{
+			console.log(err)
+		})
+
 	}
 }
 
