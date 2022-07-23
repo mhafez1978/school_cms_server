@@ -37,4 +37,8 @@ const courses = (req,res)=>{
 	}
 }
 
-module.exports = { home , about, courses }
+const setupCourses = (req,res) => {
+	return controllers.setupCoursesController(req,res);
+}
+
+module.exports = { home , about, courses, setupCourses }
