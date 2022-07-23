@@ -45,7 +45,7 @@ const getAllCourses = async(req,res)=>{
 		res.send(data);
 	}else{
 		const slug = req.params.query;
-		const data = await Course.findOne({
+		const data = await Course.findAll({
 			where: {
 				title:{
 					[Op.like]:`%${slug}%`
@@ -71,22 +71,38 @@ const addNewCourse = async(req,res)=>{
 	const newCourse = req.body;
 	const publishedCourse = await Course.create(newCourse)
 	.then(publishedCourse=>{
-		console.log("Added Course: ", publishedCourse)
+		res.send(publishedCourse)
 	}).catch(err=>{
 		console.log(err)
 	})
-	res.send('Finished adding new course... from AddNewCourse Controller');
+	
 }
 
 const updateExistingCourse = async(req,res)=>{
-	let myId = req.params.id;
-	myId = Number(myId)
-	const data = await Course.findOne({
-		where:{
-			id: myId
+	const id = req.params.id;
+	const title = req.body.title;
+	const description =  req.body.description;
+
+	const course = await Course.findOne({
+		where: {
+			id: `${id}`
 		}
 	})
-	res.send('data')
+	.then(course=>{
+		if(title === undefined || description === undefined ){
+			res.send("Ops, to update this post you need to enter the values you wish to update")
+		}else{
+			course.title = `${title}`
+			course.description = `${description}`
+			return savedCourse = course.save()
+		}
+	})
+	.then(savedCourse=>{
+		res.send(savedCourse);
+	})
+	.catch(err=>{
+		console.log(err)
+	})
 }
 
 const deleteExistingCourse = (req,res)=>{
