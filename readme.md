@@ -6,7 +6,9 @@
 - dotenv (to protect exposing app settings and configurations).
 ---
 
-This is still a project in the works, I created a test model course and all routes, controllers call to do CRUD working 100%.
+This is still a project in the works, I created a test model course and all routes, controllers call to do CRUD working 100%. to install and test please clone or download and launch in vscode, in terminal window switch to dircectory containing app then run : > npm install. Once all dependencies packages are installed , then you can have to modify database settings to match your existing db settings, then run: > npm run dev to start in dev or run: > npm run start.
+
+Test using postman, for routes to test check app.js for all exposed routes.
 
 > See my Beta Database diagram on LucidCharts here:
 
