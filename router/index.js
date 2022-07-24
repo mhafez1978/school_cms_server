@@ -12,6 +12,12 @@ const about = (req,res) => {
 // this is a useful route to handle courses 
 // this will send req,res to controller that will handle logic to what we need to do 
 
+const setupSchool = (req,res) => {
+	return controllers.setupSchoolController(req,res);
+}
+
+
+
 const courses = (req,res)=>{
 
 	// this will only trigger when we call /courses route
@@ -41,4 +47,4 @@ const setupCourses = (req,res) => {
 	return controllers.setupCoursesController(req,res);
 }
 
-module.exports = { home , about, courses, setupCourses }
+module.exports = { home , about, courses, setupSchool, setupCourses }

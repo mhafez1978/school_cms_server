@@ -2,19 +2,27 @@ const { DataTypes } = require("sequelize");
 const db= require("../../database/db.js");
 
 const Course = db.define("course",{
-	id:{
+	courseId:{
 		type: DataTypes.INTEGER,
 		autoIncrement:true,
 		allowNull:false,
 		primaryKey: true,
 	},
-	title:{
+	courseTitle:{
 		type: DataTypes.STRING,
 		allowNull:false,
 	},
-	description:{
+	courseDescription:{
 		type: DataTypes.STRING,
 		allowNull:false,
+	},
+	courseStartDate:{
+		type: DataTypes.DATEONLY,
+		allowNull:true,
+	},
+	courseEndDate:{
+		type: DataTypes.DATEONLY,
+		allowNull:true,
 	}
 })
 

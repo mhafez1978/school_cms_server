@@ -1,14 +1,12 @@
 const { Op } = require('sequelize');
 const db = require("../../database/db.js");
-const Course = require("../../models/courses/courses.js");
+const Course = require("../../models/course/course.js");
 
 
 // Setup courses controller
-
 const setupCoursesController = (req, res) => {
 	db.sync({force:true})
 	.then(results => {
-		console.log(results);
 		res.send("courses table was dropped then re-synced");
 	}).catch(err=>{
 		console.log(err);
@@ -17,8 +15,6 @@ const setupCoursesController = (req, res) => {
 
 
 // this is the courses controller index 
-// this file will house all logic that handles courses
-// 
 const getAllCourses = async(req,res)=>{
 	if(Number(req.params.query) === Number(req.params.query)){
 		
@@ -26,7 +22,7 @@ const getAllCourses = async(req,res)=>{
 		const myId = Number(id);
 		const data = await Course.findOne({
 			where:{
-				id: myId
+				courseId: myId
 			}
 		})
 		.then(data=>{
@@ -42,18 +38,22 @@ const getAllCourses = async(req,res)=>{
 		})
 	}else if(req.params.query === undefined){
 		const data = await Course.findAll()
-		res.send(data);
+		if(data.length === 0){
+			res.send('No courses added yet, you should add a course first ...')
+		}else{
+			res.send(data)
+		}
 	}else{
 		const slug = req.params.query;
 		const data = await Course.findAll({
 			where: {
-				title:{
+				courseTitle:{
 					[Op.like]:`%${slug}%`
 				}
 			}
 		})
 		.then(data=>{
-			if(data){
+			if(data.length > 0){
 				console.log(data)
 				res.send(data)
 			}else{
@@ -68,6 +68,7 @@ const getAllCourses = async(req,res)=>{
 }
 
 const addNewCourse = async(req,res)=>{
+	// expecting courseTitle, courseDescription, courseStartDate, courseEndDate from req.body
 	const newCourse = req.body;
 	const publishedCourse = await Course.create(newCourse)
 	.then(publishedCourse=>{
@@ -80,21 +81,25 @@ const addNewCourse = async(req,res)=>{
 
 const updateExistingCourse = async(req,res)=>{
 	const id = req.params.id;
-	const title = req.body.title;
-	const description =  req.body.description;
+	const title = req.body.courseTitle;
+	const description =  req.body.courseDescription;
+	const startDate = req.body.courseStartDate;
+	const endDate = req.body.courseEndDate;
 
 	const course = await Course.findOne({
 		where: {
-			id: `${id}`
+			courseId: `${id}`
 		}
 	})
 	.then(course=>{
-		if(title === undefined || description === undefined ){
-			res.send("Ops, to update this post you need to enter the values you wish to update")
+		if(title === undefined || description === undefined || startDate === undefined || endDate === undefined ){
+			res.send("Ops, to update this post you need to enter all the required values to update ...")
 		}else{
-			course.title = `${title}`
-			course.description = `${description}`
-			return savedCourse = course.save()
+			course.courseTitle = `${title}`;
+			course.courseDescription = `${description}`;
+			course.courseStartDate = `${startDate}`;
+			course.courseEndDate = `${endDate}`;
+			return savedCourse = course.save();
 		}
 	})
 	.then(savedCourse=>{
@@ -105,9 +110,27 @@ const updateExistingCourse = async(req,res)=>{
 	})
 }
 
-const deleteExistingCourse = (req,res)=>{
-	console.log(req.params.id)
-	res.send('Deleting Existing course...')
+const deleteExistingCourse = async(req,res)=>{
+	const id = req.params.id
+	const date = await Course.destroy({
+		where:{
+			courseId:id
+		}
+	})
+	.then(data=>{
+		if(data === 1){
+			res.send('Course was deleted successfully ...');
+		}else{
+			res.send('Either this course was already deleted or, course not found with the specified Id ...');
+		}
+		
+	})
 }
 
-module.exports = { getAllCourses, addNewCourse, updateExistingCourse, deleteExistingCourse, setupCoursesController }
+module.exports = { 
+	getAllCourses, 
+	addNewCourse, 
+	updateExistingCourse, 
+	deleteExistingCourse, 
+	setupCoursesController
+}
