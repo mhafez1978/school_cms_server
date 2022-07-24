@@ -5,6 +5,9 @@
 - MySQL, Sequelize
 - dotenv (to protect exposing app settings and configurations).
 ---
+
+This is still a project in the works, I created a test model course and all routes, controllers call to do CRUD working 100%.
+
 > See my Beta Database diagram on LucidCharts here:
 
  - https://lucid.app/lucidchart/943a973f-6601-498b-9000-6604c5b41324/edit?viewport_loc=-1348%2C-893%2C3173%2C1562%2C0_0&invitationId=inv_59f9c443-3f5d-4b34-a1c5-745eeb051418#
