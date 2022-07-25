@@ -24,6 +24,8 @@ const Course = db.define("course",{
 		type: DataTypes.DATEONLY,
 		allowNull:true,
 	}
+},{
+	onDelete: 'cascade'
 })
 
 module.exports = Course

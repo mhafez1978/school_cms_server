@@ -15,8 +15,15 @@ myRouter.get('/', router.home)
 myRouter.get('/about', router.about)
 
 
-// setup routes for School Table
+// setup routes for creating the School Table
 myRouter.put('/setup/school', router.setupSchool);
+// create route to add new school entity in the table above
+myRouter.post('/setup/school', router.configureSchool);
+// create route to get existing school info
+myRouter.get('/setup/school/:id', router.getExistingSchoolInfo);
+// create route to modify existing school info 
+myRouter.patch('/setup/school/:id', router.updateExistingSchoolInfo);
+// create a route to delete the school
 
 
 

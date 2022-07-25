@@ -16,7 +16,17 @@ const setupSchool = (req,res) => {
 	return controllers.setupSchoolController(req,res);
 }
 
+const configureSchool = (req,res) => {
+	return controllers.configureSchoolController(req,res);
+}
 
+const getExistingSchoolInfo = (req,res) => {
+	return controllers.getSchoolInfoController(req,res);
+}
+
+const updateExistingSchoolInfo = (req,res) => {
+	return controllers.updateSchoolInfoController(req,res);
+}
 
 const courses = (req,res)=>{
 
@@ -47,4 +57,4 @@ const setupCourses = (req,res) => {
 	return controllers.setupCoursesController(req,res);
 }
 
-module.exports = { home , about, courses, setupSchool, setupCourses }
+module.exports = { home , about, courses, setupSchool, configureSchool, getExistingSchoolInfo,updateExistingSchoolInfo, setupCourses }

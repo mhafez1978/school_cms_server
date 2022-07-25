@@ -127,6 +127,8 @@ const deleteExistingCourse = async(req,res)=>{
 	})
 }
 
+
+
 module.exports = { 
 	getAllCourses, 
 	addNewCourse, 

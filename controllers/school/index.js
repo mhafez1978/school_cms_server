@@ -5,9 +5,10 @@ const db = require("../../database/db.js");
 const School = require("../../models/school/school.js");
 const Course = require("../../models/course/course.js");
 
+//creates the table and the associations
 const setupSchoolController = (req,res) =>{
-
 	School.hasMany(Course);
+	Course.belongsTo(School);
 
 	db.sync({force:true})
 	.then(results => {
@@ -15,6 +16,86 @@ const setupSchoolController = (req,res) =>{
 	}).catch(err=>{
 		console.log(err);
 	})
+}
+
+// adds your first school to the schools table
+const configureSchoolController = async(req,res)=>{
+	const schoolName = req.body.schoolName;
+	const schoolDescription = req.body.schoolDescription;
+	if(schoolName === undefined || schoolDescription === undefined){
+		res.send('To create or save this school you need to fill all required info ...')	
+	}else{
+		const mySchool = await School.create({
+			schoolName: schoolName,
+			schoolDescription:schoolDescription
+		})
+		.then(mySchool=>{
+			console.log(mySchool);
+			res.send(mySchool);
+		})
+		.catch(err=>{
+			console.log(err);
+			res.send(err);
+		})
+	}
+}
+
+// gets the school info in the school table
+const getSchoolInfoController = async(req,res) => {
+	const id = req.params.id;
+	const mySchool = await School.findOne({
+		where:{
+			// notice I hard coded 1 here for schoolId since I want only one school setup
+			// I dont want to make the software managing more than one school by default.
+			schoolId:id
+		}
+	})
+	.then(mySchool=>{
+		if(mySchool === null){
+			res.send('No school with this Id, or you have not created a School yet. ');
+		}else{
+			res.send(mySchool);
+		}
+	})
+	.catch(err=>{
+		res.send(err);
+	})
+}
+
+const updateSchoolInfoController = async(req,res) => {
+	const id = req.params.id;
+	const schoolName = req.body.schoolName;
+	const schoolDescription = req.body.schoolDescription;
+
+	if(schoolName !== undefined || schoolDescription !== undefined){
+		const data = await School.findOne({
+			where: {
+				schoolId:id
+			}
+		})
+		.then(data=>{
+			if(data !== null){
+				data.schoolName = schoolName;
+				data.schoolDescription = schoolDescription;
+				return data
+			}else{
+				res.send('No School Found with the given Id ...')
+			}
+		})
+		.then(data=>{
+			return newSchool =  data.save();
+		})
+		.then(newSchool => {
+			res.send(newSchool);
+		})
+		.catch(err=>{
+			console.log(err);
+			res.send(err);
+		})
+	}else{
+		res.send('Please enter the new info to update ...');
+	}
+
 }
 
 // what should we allow admin/principal user to do in School
@@ -43,4 +124,4 @@ const setupSchoolController = (req,res) =>{
 
 
 
-module.exports = setupSchoolController;
+module.exports = {setupSchoolController, configureSchoolController, getSchoolInfoController, updateSchoolInfoController}

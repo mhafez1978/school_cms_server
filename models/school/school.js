@@ -16,6 +16,8 @@ const School = db.define("school",{
 		type: DataTypes.STRING,
 		allowNull:false,
 	}
+},{
+	onDelete: 'cascade'
 })
 
 module.exports = School
