@@ -8,7 +8,6 @@ const Course = require("../../models/course/course.js");
 //creates the table and the associations
 const setupSchoolController = (req,res) =>{
 	School.hasMany(Course);
-	Course.belongsTo(School);
 
 	db.sync({force:true})
 	.then(results => {
@@ -20,24 +19,32 @@ const setupSchoolController = (req,res) =>{
 
 // adds your first school to the schools table
 const configureSchoolController = async(req,res)=>{
-	const schoolName = req.body.schoolName;
-	const schoolDescription = req.body.schoolDescription;
-	if(schoolName === undefined || schoolDescription === undefined){
-		res.send('To create or save this school you need to fill all required info ...')	
-	}else{
-		const mySchool = await School.create({
-			schoolName: schoolName,
-			schoolDescription:schoolDescription
-		})
-		.then(mySchool=>{
-			console.log(mySchool);
-			res.send(mySchool);
-		})
-		.catch(err=>{
-			console.log(err);
-			res.send(err);
-		})
-	}
+	const {
+		schoolName,
+		schoolDescription,
+		newCourseTitle,
+		newCourseDescription
+	} = req.body;
+	
+	let newCourse = { courseTitle:newCourseTitle, courseDescription: newCourseDescription};
+	
+	const mySchool = await School.create({
+		schoolName: schoolName,
+		schoolDescription: schoolDescription
+	})
+	.then(async(mySchool) =>{
+		await mySchool.save();
+		const course = await Course.create({courseTitle:newCourseTitle, courseDescription:newCourseDescription, schoolSchoolId: mySchool.dataValues.schoolId});
+		await course.save();
+		return data = {"school": mySchool.dataValues,"course": course.dataValues};
+	})
+	.then(data =>{
+		console.log("The following was school, and course(s) was added ...", data);
+		res.json({"The following was school, and course(s) was added ...": data});
+	})
+	.catch(err=>{
+		console.log(err)
+	})
 }
 
 // gets the school info in the school table
