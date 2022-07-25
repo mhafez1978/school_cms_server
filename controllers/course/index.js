@@ -81,10 +81,10 @@ const addNewCourse = async(req,res)=>{
 
 const updateExistingCourse = async(req,res)=>{
 	const id = req.params.id;
-	const title = req.body.courseTitle;
-	const description =  req.body.courseDescription;
-	const startDate = req.body.courseStartDate;
-	const endDate = req.body.courseEndDate;
+	let newTitle = req.body.courseTitle;
+	let newDescription =  req.body.courseDescription;
+	let newStartDate = req.body.courseStartDate;
+	let newEndDate = req.body.courseEndDate;
 
 	const course = await Course.findOne({
 		where: {
@@ -92,18 +92,35 @@ const updateExistingCourse = async(req,res)=>{
 		}
 	})
 	.then(course=>{
-		if(title === undefined || description === undefined || startDate === undefined || endDate === undefined ){
-			res.send("Ops, to update this post you need to enter all the required values to update ...")
-		}else{
-			course.courseTitle = `${title}`;
-			course.courseDescription = `${description}`;
-			course.courseStartDate = `${startDate}`;
-			course.courseEndDate = `${endDate}`;
-			return savedCourse = course.save();
+		
+		if(!newTitle || newTitle === undefined || newTitle.length === 0){
+			// newTitle is not present or blank
+			newTitle = course.courseTitle
 		}
+
+		if(!newDescription || newDescription === undefined || newDescription.length === 0){
+			// newDescription is not present or blank
+			newDescription = course.courseDescription
+		}
+
+		if(!newStartDate || newStartDate === undefined){
+			// newDescription is not present or blank
+			newStartDate = course.courseStartDate
+		}
+
+		if(!newEndDate || newEndDate === undefined){
+			newEndDate = course.courseEndDate
+		}
+	
+		course.courseTitle = newTitle,
+		course.courseDescription = newDescription,
+		course.courseStartDate = newStartDate,
+		course.courseEndDate = newEndDate
+		
+		return course
 	})
-	.then(savedCourse=>{
-		res.send(savedCourse);
+	.then((course)=>{
+		res.send(course)
 	})
 	.catch(err=>{
 		console.log(err)

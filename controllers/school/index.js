@@ -40,7 +40,7 @@ const configureSchoolController = async(req,res)=>{
 	})
 	.then(data =>{
 		console.log("The following was school, and course(s) was added ...", data);
-		res.json({"The following was school, and course(s) was added ...": data});
+		res.json({"data": data});
 	})
 	.catch(err=>{
 		console.log(err)
