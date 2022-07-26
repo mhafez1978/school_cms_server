@@ -162,7 +162,11 @@ const updateSchoolInfoController = async(req,res) => {
 const getAllSchoolsController = async(req,res)=>{
 	const allSchools = await School.findAll()
 	.then(allSchools=>{
-		res.send(allSchools)
+		if(allSchools.length === 0){
+			res.send('There are no Schools yet setup ...')
+		}else{
+			res.send(allSchools)
+		}
 	})
 	.catch(err=>{
 		res.send(err)

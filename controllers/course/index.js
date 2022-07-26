@@ -19,7 +19,6 @@ const setupCoursesController = (req, res) => {
 // this is the courses controller index 
 const getAllCourses = async(req,res)=>{
 	if(Number(req.params.query) === Number(req.params.query)){
-		
 		const id = req.params.query;
 		const myId = Number(id);
 		const data = await Course.findOne({
@@ -67,6 +66,27 @@ const getAllCourses = async(req,res)=>{
 		})
 
 	}
+}
+
+const getCoursesBySchool = async(req,res) => {
+	const schoolId = req.params.id;
+	return allSchoolCourses = await Course.findAll({
+		where:{
+			schoolSchoolId: schoolId
+		}
+	})
+	.then(allSchoolCourses=>{
+		if(!allSchoolCourses){
+			res.sed('School id not found ...')
+		}else if(allSchoolCourses.length === 0){
+			res.send('no courses found ...')
+		}else{
+			res.send(allSchoolCourses);
+		}
+	})
+	.catch(err=>{
+		res.send(err)
+	})
 }
 
 const addNewCourse = async(req,res)=>{
@@ -180,5 +200,6 @@ module.exports = {
 	addNewCourse, 
 	updateExistingCourse, 
 	deleteExistingCourse, 
-	setupCoursesController
+	setupCoursesController,
+	getCoursesBySchool
 }
