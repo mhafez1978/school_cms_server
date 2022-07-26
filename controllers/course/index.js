@@ -129,7 +129,8 @@ const addNewCourse = async(req,res)=>{
 }
 
 const updateExistingCourse = async(req,res)=>{
-	const id = req.params.id;
+	const sid = req.params.id; //school id from req.params
+	let cid = req.body.cid; //this is the course id also provided by end user via req.body.cid
 	let newTitle = req.body.courseTitle;
 	let newDescription =  req.body.courseDescription;
 	let newStartDate = req.body.courseStartDate;
@@ -137,10 +138,13 @@ const updateExistingCourse = async(req,res)=>{
 
 	const course = await Course.findOne({
 		where: {
-			courseId: `${id}`
+			[Op.and]: [
+				{ schoolSchoolId: `${sid}`},
+				{ courseId: `${cid}`}
+			  ],
 		}
 	})
-	.then(course=>{
+	.then(async(course)=>{
 		
 		if(!newTitle || newTitle === undefined || newTitle.length === 0){
 			// newTitle is not present or blank
@@ -161,18 +165,17 @@ const updateExistingCourse = async(req,res)=>{
 			newEndDate = course.courseEndDate
 		}
 	
-		course.courseTitle = newTitle,
-		course.courseDescription = newDescription,
-		course.courseStartDate = newStartDate,
-		course.courseEndDate = newEndDate
-		
-		return course
+		course.courseTitle = newTitle;
+		course.courseDescription = newDescription;
+		course.courseStartDate = newStartDate;
+		course.courseEndDate = newEndDate;
+		return await course.save();
 	})
 	.then((course)=>{
-		res.send(course)
+		res.send(course);
 	})
 	.catch(err=>{
-		console.log(err)
+		console.log(err);
 	})
 }
 
