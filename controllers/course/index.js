@@ -1,6 +1,8 @@
+const { reset } = require('nodemon');
 const { Op } = require('sequelize');
 const db = require("../../database/db.js");
 const Course = require("../../models/course/course.js");
+const School = require('../../models/school/school.js');
 
 
 // Setup courses controller
@@ -69,14 +71,41 @@ const getAllCourses = async(req,res)=>{
 
 const addNewCourse = async(req,res)=>{
 	// expecting courseTitle, courseDescription, courseStartDate, courseEndDate from req.body
-	const newCourse = req.body;
-	const publishedCourse = await Course.create(newCourse)
-	.then(publishedCourse=>{
-		res.send(publishedCourse)
-	}).catch(err=>{
-		console.log(err)
+	const id = req.params.id;
+	const title = req.body.courseTitle;
+	const description = req.body.courseDescription;
+	const start = req.body.courseStartDate
+	const end = req.body.courseEndDate;
+
+	const school = await School.findOne({
+		where:{
+			schoolId: id
+		}
 	})
-	
+	.then(async(school)=>{
+		if(!school){
+			res.send('Unable to find School matching this Id ...');
+		}else{
+			if(!title || !description || title === undefined || description === undefined || title.length === 0 || description.length === 0){
+				res.send('Ops... \nCourse Title and Course Description are required and/or Cannot be left blank ...')
+			}else{
+				const course = await Course.create({
+					courseTitle:title,
+					courseDescription:description,
+					courseStartDate: start,
+					courseEndDate:end,
+					schoolSchoolId:school.schoolId // this can be hard coded to the valueu of 1 if only 1 school
+				})
+				.then(course=>{
+					res.send(course)
+				})
+				.catch(err=>{
+					res.send(err)
+				})
+			}
+			
+		}
+	})
 }
 
 const updateExistingCourse = async(req,res)=>{
@@ -138,7 +167,7 @@ const deleteExistingCourse = async(req,res)=>{
 		if(data === 1){
 			res.send('Course was deleted successfully ...');
 		}else{
-			res.send('Either this course was already deleted or, course not found with the specified Id ...');
+			res.send('Either this course was already deleted or, course not found in database that matches with the specified Course Id ...');
 		}
 		
 	})

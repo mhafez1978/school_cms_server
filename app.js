@@ -34,7 +34,7 @@ myRouter.put('/setup/courses', router.setupCourses);
 // list all available courses
 myRouter.get('/courses', router.courses);
 myRouter.get('/courses/:query', router.courses);
-myRouter.post('/courses/add', router.courses);
+myRouter.post('/courses/add/:id', router.courses);
 myRouter.patch('/courses/:id', router.courses);
 myRouter.delete('/courses/:id', router.courses);
 

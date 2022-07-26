@@ -8,6 +8,7 @@ const Course = require("../../models/course/course.js");
 //creates the table and the associations
 const setupSchoolController = (req,res) =>{
 	School.hasMany(Course);
+	Course.belongsTo(School);
 
 	db.sync({force:true})
 	.then(results => {
@@ -19,32 +20,86 @@ const setupSchoolController = (req,res) =>{
 
 // adds your first school to the schools table
 const configureSchoolController = async(req,res)=>{
-	const {
-		schoolName,
-		schoolDescription,
-		newCourseTitle,
-		newCourseDescription
-	} = req.body;
+	let schoolName = req.body.schoolName;
+	let schoolDescription = req.body.schoolDescription;
+	let newCourseTitle = req.body.newCourseTitle;
+	let newCourseDescription = req.body.newCourseDescription;
+	let newCourseStartDate = req.body.newCourseStartDate;
+	let newCourseEndDate = req.body.newCourseEndDate;
+
+	if(schoolName === undefined || schoolName.length === 3){
+		res.send('School Name is required ...')
+	}
+	if(schoolDescription === undefined || schoolDescription.length === 0){
+		schoolDescription = ''
+	}
+
+	if(newCourseTitle === undefined || newCourseTitle === ""){
+		newCourseTitle = '';
+	}
+	if(newCourseDescription === undefined || newCourseDescription === ""){
+		newCourseDescription = '';
+	}
+	if(newCourseStartDate === undefined || newCourseStartDate === ""){
+		newCourseStartDate = Date.now();
+	}
+	if(newCourseEndDate === undefined || newCourseEndDate === ""){
+		newCourseEndDate = Date.now();
+	}
+
+	if(schoolName.length > 3 && newCourseTitle.length === 0 ){
+		//create school only
+		return myschool = await School.create({
+			schoolName: schoolName,
+			schoolDescription: schoolDescription
+		})
+		.then(myschool=>{
+			res.send({'Created school only': myschool})
+		})
+		.catch(err=>{
+			res.send(err)
+		})
+	}
+
+	if(schoolName.length > 3 && newCourseTitle.length > 0){
+		// create school and course via school
+		const mySchool = await School.create({
+			schoolName: schoolName,
+			schoolDescription:schoolDescription
+		})
+		.then(async(mySchool)=>{
+			const idx = mySchool.dataValues.schoolId
+			let mySchoolCourse = await Course.create({
+				courseTitle: newCourseTitle,
+				courseDescription: newCourseDescription,
+				courseStartDate: newCourseStartDate,
+				courseEndDate: newCourseEndDate,
+				schoolSchoolId: idx
+			})
+			.then(async(mySchoolCourse)=>{
+				await mySchoolCourse.save();
+				console.log(mySchool)
+				console.log(mySchoolCourse)
+				res.send({"School We Created: ": mySchool, "Courses created for this school: ": mySchoolCourse})
+			})
+			.catch(err=>{
+				res.send(err)
+			})
+		})
+		
+
+	}
+
+	// lets see how the info look like coming in 
 	
-	let newCourse = { courseTitle:newCourseTitle, courseDescription: newCourseDescription};
 	
-	const mySchool = await School.create({
-		schoolName: schoolName,
-		schoolDescription: schoolDescription
-	})
-	.then(async(mySchool) =>{
-		await mySchool.save();
-		const course = await Course.create({courseTitle:newCourseTitle, courseDescription:newCourseDescription, schoolSchoolId: mySchool.dataValues.schoolId});
-		await course.save();
-		return data = {"school": mySchool.dataValues,"course": course.dataValues};
-	})
-	.then(data =>{
-		console.log("The following was school, and course(s) was added ...", data);
-		res.json({"data": data});
-	})
-	.catch(err=>{
-		console.log(err)
-	})
+	// if you only provide school info and no course 
+	// school should be created
+	
+
+	//if you provide school and course info 
+	// school should be created
+	// course with association to school should be created
 }
 
 // gets the school info in the school table

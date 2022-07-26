@@ -23,6 +23,11 @@ const Course = db.define("course",{
 	courseEndDate:{
 		type: DataTypes.DATEONLY,
 		allowNull:true,
+	},
+	schoolSchoolId:{
+		type:DataTypes.INTEGER,
+		allowNull:true,
+		
 	}
 },{
 	onDelete: 'cascade'
