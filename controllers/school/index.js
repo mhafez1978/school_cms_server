@@ -129,7 +129,7 @@ const updateSchoolInfoController = async(req,res) => {
 	const schoolName = req.body.schoolName;
 	const schoolDescription = req.body.schoolDescription;
 
-	if(schoolName !== undefined || schoolDescription !== undefined){
+	if(schoolName !== undefined && schoolName.length > 0 ){
 		const data = await School.findOne({
 			where: {
 				schoolId:id
@@ -151,7 +151,6 @@ const updateSchoolInfoController = async(req,res) => {
 			res.send(newSchool);
 		})
 		.catch(err=>{
-			console.log(err);
 			res.send(err);
 		})
 	}else{
@@ -160,6 +159,15 @@ const updateSchoolInfoController = async(req,res) => {
 
 }
 
+const getAllSchoolsController = async(req,res)=>{
+	const allSchools = await School.findAll()
+	.then(allSchools=>{
+		res.send(allSchools)
+	})
+	.catch(err=>{
+		res.send(err)
+	})
+}
 // what should we allow admin/principal user to do in School
 // 1) they should be able to create, edit or delete a school
 // 2) create, edit or delete school a legal name
@@ -186,4 +194,4 @@ const updateSchoolInfoController = async(req,res) => {
 
 
 
-module.exports = {setupSchoolController, configureSchoolController, getSchoolInfoController, updateSchoolInfoController}
+module.exports = {setupSchoolController, configureSchoolController, getSchoolInfoController, updateSchoolInfoController, getAllSchoolsController}

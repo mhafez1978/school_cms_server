@@ -20,6 +20,7 @@ myRouter.put('/setup/school', router.setupSchool);
 // create route to add new school entity in the table above
 myRouter.post('/setup/school', router.configureSchool);
 // create route to get existing school info
+myRouter.get('/setup/school', router.getAllSchools)
 myRouter.get('/setup/school/:id', router.getExistingSchoolInfo);
 // create route to modify existing school info 
 myRouter.patch('/setup/school/:id', router.updateExistingSchoolInfo);

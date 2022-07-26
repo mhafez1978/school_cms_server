@@ -28,6 +28,10 @@ const updateExistingSchoolInfo = (req,res) => {
 	return controllers.updateSchoolInfoController(req,res);
 }
 
+const getAllSchools = (req,res) =>{
+	return controllers.getAllSchoolsController(req,res);
+}
+
 const courses = (req,res)=>{
 
 	// this will only trigger when we call /courses route
@@ -57,4 +61,4 @@ const setupCourses = (req,res) => {
 	return controllers.setupCoursesController(req,res);
 }
 
-module.exports = { home , about, courses, setupSchool, configureSchool, getExistingSchoolInfo,updateExistingSchoolInfo, setupCourses }
+module.exports = { home , about, courses, setupSchool, configureSchool, getExistingSchoolInfo,updateExistingSchoolInfo, getAllSchools, setupCourses }
